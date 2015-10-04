@@ -6,17 +6,21 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
+import openfl.Assets;
+import flixel.tile.FlxTilemap;
 
 /**
  * A FlxState which can be used for the actual gameplay.
  */
 class PlayState extends FlxState
 {
+	var player:Player;
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
 	override public function create():Void
 	{
+		add(player = new Player(100, 50, this));
 		super.create();
 	}
 	
