@@ -13,28 +13,29 @@ import flixel.util.FlxColor;
  */
 class MenuState extends FlxState
 {
-	public static inline var OPTIONS:Int = 2;
+	//inline = r_only, public static = can be read anywhere
+	var opt0_txt:FlxText;
+	var opt1_txt:FlxText;
+	var ptr:FlxSprite;
+	var current: Int = 0;
+	public static inline var OPTIONS: Int = 2;
 	
-	var opt0txt:FlxText;
-	var opt1txt:FlxText;
-	
-	var pointer:FlxSprite;
-	var option:Int = 0;
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
 	override public function create():Void
 	{
 		FlxG.state.bgColor = FlxColor.BLUE;
-		opt0txt = new FlxText(FlxG.width * 2 / 3, FlxG.height * 2 / 3, 150, "Play the Game");
-		opt1txt = new FlxText(FlxG.width * 2 / 3, FlxG.height * 2 / 3 + 30, 150, "Cheat Sheet");
-		opt0txt.size = opt1txt.size = 16;
-		add(opt0txt);
-		add(opt1txt);
-		pointer = new FlxSprite();
-		pointer.makeGraphic(10, 10, FlxColor.YELLOW);
-		pointer.x = opt0txt.x - pointer.width - 10;
-		add(pointer);
+		opt0_txt = new FlxText(FlxG.width / 2, FlxG.height * 2 / 3, 100, "Option 1");
+		opt1_txt = new FlxText(FlxG.width / 2, FlxG.height * 2 / 3 + 30, 100, "Option 2");
+		opt0_txt.size =  opt1_txt.size = 16;
+		add(opt0_txt);
+		add(opt1_txt);
+		ptr = new FlxSprite();
+		ptr.makeGraphic(10, 10, FlxColor.YELLOW);
+		ptr.x = (opt0_txt.x) - 30;
+		//ptr.y = (opt0_txt.y);
+		add(ptr);
 		super.create();
 	}
 	
@@ -52,31 +53,29 @@ class MenuState extends FlxState
 	 */
 	override public function update():Void
 	{
-		//set y position of cursor based on option choice
-		switch(option) {
-		case 0:
-			pointer.y = opt0txt.y;
-		case 1:
-			pointer.y = opt1txt.y;
+		//set y pos basd on current option
+		switch(current) {
+			case 0:
+				ptr.y = opt0_txt.y;
+			case 1:
+				ptr.y = opt1_txt.y;
 		}
-		
-		//listen for keys
-		
+		//keylistener
 		if (FlxG.keys.justPressed.UP) {
-			option = (option - 1 + OPTIONS) % OPTIONS;
+			current = (current - 1 + OPTIONS) % OPTIONS;
 		}
 		if (FlxG.keys.justPressed.DOWN) {
-			option = (option + 1 + OPTIONS) % OPTIONS;
+			current = (current + 1 + OPTIONS) % OPTIONS;
 		}
 		if (FlxG.keys.anyJustPressed(["SPACE", "ENTER"])) {
-			switch(option) {
-			case 0:
-				FlxG.state.bgColor = FlxColor.BLACK;
-				FlxG.switchState(new PlayState());
-			case 1:
-				FlxG.openURL("http://haxeflixel.com/documentation/cheat-sheet/");
+			switch (current) {
+				case 0:
+					FlxG.switchState(new PlayState());
+				case 1:
+					FlxG.state.bgColor = FlxColor.BLACK;
 			}
 		}
+		
 		super.update();
 	}	
 }
